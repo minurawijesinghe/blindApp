@@ -42,12 +42,11 @@ class ColourItems extends Component {
   render() {
     index++;
     boolShadowColor = false;
-    console.log(colourList[index].color);
-    if (String(colourList[index].shade) != ""){
+    if (String(colourList[index].shade) != ''){
      boolShadowColor = true;
     }
 
-    let percentageDescription = 'Percentage : ' + String(colourList[index].percentage).substring(0,4) + '%.';
+    let percentageDescription = 'Percentage : ' + String(colourList[index].percentage).split(".")[0] + '%.';
     let shadeDescription = 'Shade Color : ' + String(colourList[index].shade) + '.';
     return (
       <View style = {styles.output}>
@@ -55,7 +54,7 @@ class ColourItems extends Component {
         <View style={{backgroundColor:String(colourList[index].color),width:50, height:50,borderColor:'white', borderWidth:1.5, borderRadius:4}}/>
 
           {
-            boolShadowColor?
+            boolShadowColor ?
             <View style={styles.flatlistTextcontainer}>
               <Text style={styles.flatlistTextHeader}>{String(colourList[index].color)}</Text>
             <Text style={styles.flatListText}>{shadeDescription}</Text>
@@ -127,16 +126,19 @@ class OpenCamera extends Component {
     }
   };
   textRead = (toRead) => {
+    Tts.stop();
     Tts.speak(toRead);
   }
+ 
+
 }
 class ProcessOutput extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      
+
     };
-    boolScondaryPatrren=false;
+    boolScondaryPatrren = false;
     boolShadowColor = false;
     base64Code = null;
     text = null;
@@ -146,14 +148,15 @@ class ProcessOutput extends Component {
     this.textRead('image pattern is ' + String(pattern) + ' and');
     text = ('Image pattern is ' + String(pattern) + '. ');
     if (String(pattern).match('irregular')) {
-      
-        this.textRead('secondary pattern is '+String(secondary_pattern)+'.');
-        text = text + 'secondary pattern is '+String(secondary_pattern)+'.';
-      
+
+        this.textRead('secondary pattern is ' + String(secondary_pattern) + '.');
+        text = text + 'secondary pattern is ' + String(secondary_pattern) + '.';
+
     }
     var i;
     for (i = 0; i < colors.length; i++) {
-      var trimmed = String(colors[i].percentage).substring(0, 5);
+      var trimmed = String(colors[i].percentage).split(".")[0];
+      console.log(trimmed);
       if (String(colors[i].shade) == '') {
         text = text + ' the color ' + String(colors[i].color) + ' consist with ' + trimmed + ' percent.';
         this.textRead(' the color  ' + String(colors[i].color) + ' consist with ' + trimmed + ' percent.');
@@ -164,40 +167,40 @@ class ProcessOutput extends Component {
       }
     }
     //console.log(text);
-    this.textRead('  to hear the description again tap on the left side of the screen or tap right side to take new photo');
+    this.textRead('  to hear the description tap on the left side of the screen or tap right side to take new photo');
 
 
 
   }
   again() {
-    this.textRead(String(text));
+    this.textRead(text);
+   
   }
   navigateToHome() {
-    boolScondaryPatrren=false;
+    boolScondaryPatrren = false;
     boolShadowColor = false;
     base64Code = null;
     text = null;
-    index=-1;
-    colourList=null;
+    index = -1;
+    colourList = null;
     this.props.navigation.push('Home');
   }
 
 
   textRead = (toRead) => {
     Tts.setDefaultRate(0.8, true);
+    Tts.stop();
     Tts.speak(toRead);
   }
-
   render() {
-    console.log(recievedJason);
-    if(recievedJason.secondry_pattern!= false){
-      console.log("conditional loop achieved");
+    if (recievedJason.secondry_pattern != false){
+      console.log('conditional loop achieved');
       boolScondaryPatrren = true;
 
     }
     console.log(colourList);
-    let patternHeader = "Pattern is "+recievedJason.pattern;
-    let secondary_patternHeader = "Secondary pattern is "+recievedJason.secondry_pattern;
+    let patternHeader = 'Pattern is ' + recievedJason.pattern;
+    let secondary_patternHeader = 'Secondary pattern is ' + recievedJason.secondry_pattern;
     return (
       <View>
         <View style={styles.ProcessOutputView} >
@@ -255,6 +258,7 @@ class HomePage extends Component {
     this.textRead('touch left side to take a new photo or right side to process the photo');
   }
   textRead = (toRead) => {
+    Tts.stop();
     Tts.speak(toRead);
   }
 
@@ -287,7 +291,6 @@ class HomePage extends Component {
       console.log(error);
     }
   }
-
   processHandler() {
     if (base64Code != null) {
 
@@ -301,13 +304,14 @@ class HomePage extends Component {
     }
   }
   cameraHandler(){
-    boolScondaryPatrren=false;
+    boolScondaryPatrren = false;
     boolShadowColor = false;
     base64Code = null;
-    recievedJason=null;
-    colourList=null;
+    recievedJason = null;
+    colourList = null;
     text = null;
-    this.props.navigation.push('camera')
+    this.props.navigation.push('camera');
+
   }
   render() {
     return (
@@ -475,7 +479,7 @@ const styles = StyleSheet.create({
   ProcessOutputHeaderText:{
     color:'black',
     fontSize:20,
-    fontWeight:'bold'
+    fontWeight:'bold',
   },
   ProcessOutputSecondaryText:{
     color:'gray',
